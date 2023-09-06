@@ -4,70 +4,16 @@
     <div class="flex flex-column h-full">
       <div class="flex align-items-center px-5 flex-shrink-0" style="height:60px">
         <img :src="logo" alt="logo" height="35">
-        <span class="font-bold text-xl ml-3" style="font-family: monospace">CMS Tool</span>
+        <span class="font-bold text-xl ml-3">CMS Tool</span>
       </div>
       <div class="overflow-y-auto">
         <ul class="list-none p-3 m-0">
           <li>
             <ul class="list-none p-0 m-0 overflow-hidden">
-              <li>
-                <a v-ripple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                  <i class="pi pi-home mr-2"></i>
-                  <span class="font-medium">Dashboard</span>
-                </a>
-              </li>
-              <li>
-                <a v-ripple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                  <i class="pi pi-bookmark mr-2"></i>
-                  <span class="font-medium">Bookmarks</span>
-                </a>
-              </li>
-              <li>
-                <a v-ripple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
-                  v-styleclass="{ selector: '@next', enterClass: 'hidden', enterActiveClass: 'slidedown', leaveToClass: 'hidden', leaveActiveClass: 'slideup' }">
-                  <i class="pi pi-chart-line mr-2"></i>
-                  <span class="font-medium">Reports</span>
-                  <i class="pi pi-chevron-down ml-auto"></i>
-                </a>
-                <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
-                  <li>
-                    <a v-ripple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
-                      v-styleclass="{ selector: '@next', enterClass: 'hidden', enterActiveClass: 'slidedown', leaveToClass: 'hidden', leaveActiveClass: 'slideup' }">
-                      <i class="pi pi-chart-line mr-2"></i>
-                      <span class="font-medium">Revenue</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a v-ripple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                      <i class="pi pi-chart-line mr-2"></i>
-                      <span class="font-medium">Expenses</span>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <a v-ripple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                  <i class="pi pi-users mr-2"></i>
-                  <span class="font-medium">Team</span>
-                </a>
-              </li>
-              <li>
-                <a v-ripple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                  <i class="pi pi-comments mr-2"></i>
-                  <span class="font-medium">Messages</span>
-                  <span class="inline-flex align-items-center justify-content-center ml-auto bg-blue-500 text-0 border-circle" style="min-width: 1.5rem; height: 1.5rem">3</span>
-                </a>
-              </li>
-              <li>
-                <a v-ripple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                  <i class="pi pi-calendar mr-2"></i>
-                  <span class="font-medium">Calendar</span>
-                </a>
-              </li>
-              <li>
-                <a v-ripple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                  <i class="pi pi-cog mr-2"></i>
-                  <span class="font-medium">Settings</span>
+              <li v-for="item in menu" :key="item.name">
+                <a v-ripple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple" :class="{ 'surface-100': item.active }" @click="onSelect(item)">
+                  <i class="pi mr-2" :class="`pi-${item.icon}`"></i>
+                  <span class="font-medium">{{item.name}}</span>
                 </a>
               </li>
             </ul>
@@ -92,7 +38,7 @@
         </a>
         <span class="p-input-icon-left">
           <i class="pi pi-search"></i>
-          <InputText type="text" class="border-none w-10rem sm:w-20rem" placeholder="Search" />
+          <InputText type="text" class="border-solid w-20rem" placeholder="Search" />
         </span>
       </div>
       <a v-ripple class="cursor-pointer block lg:hidden text-700 p-ripple"
@@ -128,7 +74,7 @@
       </ul>
     </div>
     <div class="p-3 flex flex-column flex-auto">
-      <div class="surface-section flex-auto">
+      <div class="surface-ground flex-auto">
         <slot></slot>
       </div>
     </div>
@@ -137,8 +83,28 @@
 </template>
 
 <script setup>
+import { shallowRef } from "vue";
 import logo from "../assets/logo.svg";
 import InputText from "primevue/inputtext";
+
+const emit = defineEmits(["selectMenu"]);
+
+const menu = shallowRef([
+  { name: "Dashboard", icon: "home", active: true },
+  { name: "Bookmarks", icon: "bookmark" },
+  { name: "Team", icon: "users" },
+  { name: "Messages", icon: "comments" },
+  { name: "Calendar", icon: "calendar" },
+  { name: "Settings", icon: "cog" },
+]);
+
+const onSelect = (item) => {
+  menu.value.forEach((menuItem) => {
+    menuItem.active = false;
+  });
+  item.active = true;
+  emit("selectMenu", item.name?.toLowerCase());
+};
 </script>
 
 <style lang="sass">

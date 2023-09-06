@@ -34,7 +34,7 @@ const summary = [
 </script>
 
 <template>
-<div class="fadein animation-duration-500 py-5 md:px-6 lg:px-8 mx-0">
+<div class="fadein animation-duration-500 py-4 md:px-4 mx-0">
   <div class="grid">
     <div class="col-12 xl:col-4 sm:col-6 px-3 hover:cursor-pointer" v-for="(data, index) in summary" :key="data.label">
       <div class="shadow-2 surface-card p-3" style="border-radius: 12px">
